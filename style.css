@@ -1,0 +1,65 @@
+body {
+    background-color: lightgray;
+}
+
+.field {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
+
+.filled {
+  background-color: black;
+}
+
+.marked {
+    background-color: red;
+}
+
+.field.error {
+    background-color: red;
+}
+
+#game-container {
+    display: grid;
+    grid-template-columns: 40px 200px;
+    grid-template-rows: 40px 200px;
+}
+
+#column-hints {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 40px);
+}
+
+#row-hints {
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    grid-template-rows: repeat(5, 40px);
+}
+
+#column-hints span,
+#row-hints span {
+  display: grid;
+  place-items: center;
+}
+
+#lives {
+    grid-column: 2;
+    grid-row: 3;
+    text-align: center;
+    font-size: 20px;
+}
+
+#nonogram-container {
+    user-select: none;
+    touch-action: none;
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(5, 40px);
+}
