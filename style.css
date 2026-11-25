@@ -24,8 +24,8 @@ body {
 
 #game-container {
     display: grid;
-    grid-template-columns: 40px 200px;
-    grid-template-rows: 40px 200px;
+    grid-template-columns: 100px 200px;
+    grid-template-rows: 100px 200px;
 }
 
 #column-hints {
@@ -46,6 +46,27 @@ body {
 #row-hints span {
   display: grid;
   place-items: center;
+}
+
+#row-hints .clue-line {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+    padding-right: 6px;
+}
+
+#column-hints .clue-line {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    padding-bottom: 6px;
+}
+
+.hint.completed {
+    color: green;
 }
 
 #lives {

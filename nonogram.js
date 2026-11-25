@@ -1,25 +1,37 @@
 let lives = 3;
 const livesElement = document.getElementById("lives");
 
-const solution = [
-  [0, 0, 1, 0, 0],
-  [0, 0, 1, 0, 0],
-  [1, 1, 1, 1, 1],
-  [0, 0, 1, 0, 0],
-  [0, 0, 1, 0, 0]
-];
-
 const resetButton = document.getElementById("reset-button");
 resetButton.addEventListener("click", () => {
     resetGame();
 });
 
-const fields = document.querySelectorAll(".field");
-const grid = document.getElementById("nonogram-container");
 let drag = null;
 
 function stopDrag() {
     drag = null;
+}
+
+function updateLineClues(lineClues, lineIndex, isColumn) {
+  for (const clue of lineClues) {
+    let completed = true;
+
+    for (let i = clue.start; i <= clue.end; i++) {
+      const row = isColumn ? i : lineIndex;
+      const col = isColumn ? lineIndex : i;
+      const field = fields[row * gridSize + col];
+
+      if (
+        !field.classList.contains("filled") ||
+        field.classList.contains("error")
+      ) {
+        completed = false;
+        break;
+      }
+    }
+
+    clue.element.classList.toggle("completed", completed);
+  }
 }
 
 function markField(field, button) {
@@ -29,8 +41,8 @@ function markField(field, button) {
     }
 
     const index = Array.prototype.indexOf.call(fields, field);
-    const row = Math.floor(index / 5);
-    const col = index % 5;
+    const row = Math.floor(index / gridSize);
+    const col = index % gridSize;
     const isFilled = solution[row][col] === 1;
     const isCorrect = isFilled === (button === 0);
 
@@ -41,6 +53,9 @@ function markField(field, button) {
         lives -= 1;
         updateLives();
     }
+    updateLineClues(clues.rows[row], row, false);
+    updateLineClues(clues.columns[col], col, true);
+
     if (lives > 0) {
         checkWin();
     }
@@ -91,9 +106,9 @@ async function updateLives() {
 }
 
 function checkWin() {
-    for (let row = 0; row < 5; row++) {
-        for (let col = 0; col < 5; col++) {
-            const field = fields[row * 5 + col];
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            const field = fields[row * gridSize + col];
             if (solution[row][col] === 1 && !field.classList.contains("filled")) {
                 return;
             }
@@ -120,6 +135,9 @@ function resetGame() {
         field.classList.remove("marked");
         field.classList.remove("finished");
         field.classList.remove("error");
+    });
+    document.querySelectorAll(".hint.completed").forEach((hint) => {
+        hint.classList.remove("completed");
     });
     lives = 3;
     updateLives();
