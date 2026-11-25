@@ -12,14 +12,42 @@ function createGrid() {
 }
 
 function createSolution(size) {
-  const solution = [];
+  let solution = [];
+
   for (let i = 0; i < size; i++) {
     solution[i] = [];
     for (let j = 0; j < size; j++) {
       solution[i][j] = Math.random() < 0.5 ? 1 : 0;
     }
   }
+
   return solution;
+}
+
+function isSolutionValid(solution) {
+  if (solution === null){
+    return false;
+  }
+
+  let rowSums = solution.map(row => row.reduce((a, b) => a + b, 0));
+  let colSums = solution[0].map((_, colIndex) => solution.reduce((sum, row) => sum + row[colIndex], 0));
+
+  return rowSums.every(sum => sum > 0) && colSums.every(sum => sum > 0);
+}
+
+function prepareGame(size) {
+  let solution;
+  do {
+    solution = createSolution(size);
+  } while (!isSolutionValid(solution));
+  const clues = createClues(solution);
+
+  createGrid();
+
+  renderClues(clues.rows, "row-hints");
+  renderClues(clues.columns, "column-hints");
+
+  return { solution, clues };
 }
 
 function getLineClues(line) {
@@ -94,15 +122,7 @@ function renderClues(lines, containerId) {
   }
 }
 
-
-const solution = createSolution(gridSize);
-const clues = createClues(solution);
-
-createGrid();
-
+const { solution, clues } = prepareGame(gridSize);
 const fields = document.querySelectorAll(".field");
 const grid = document.getElementById("nonogram-container");
-
-renderClues(clues.rows, "row-hints");
-renderClues(clues.columns, "column-hints");
 
